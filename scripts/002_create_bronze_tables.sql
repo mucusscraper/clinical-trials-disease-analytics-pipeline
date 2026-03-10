@@ -17,7 +17,7 @@ CREATE TABLE bronze.multiple_sclerosis (
 	Sex TEXT,
 	Age TEXT,
 	Phases TEXT,
-	Enrollment INT,
+	Enrollment TEXT,
 	Funder_Type TEXT,
 	Study_Type TEXT,
 	Study_Design TEXT,
