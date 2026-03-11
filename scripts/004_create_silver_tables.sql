@@ -41,6 +41,7 @@ create table silver.clinical_trials (
     collaborators TEXT,
     funder_type TEXT,
     enrollment TEXT,
+    numerical_enrollment INT,
     sex TEXT,
     age TEXT,
     phases TEXT,

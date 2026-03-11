@@ -69,6 +69,7 @@ truncate table silver.dates;
         collaborators,
         funder_type,
         enrollment,
+        numerical_enrollment,
         sex,
         age,
         phases,
@@ -84,12 +85,13 @@ truncate table silver.dates;
     trim(collaborators) as collaborators,
     trim(funder_type) as funder_type,
     case when enrollment::int = 0 then 'No enrollment'
-	    when enrollment::int >0 and enrollment::int <50 then '0-50'
-	    when enrollment::int >= 50 and enrollment::int < 100 then '50-100'
-	    when enrollment::int >= 100 and enrollment::int < 500 then '100-500'
+	    when enrollment::int >0 and enrollment::int <50 then '1-49'
+	    when enrollment::int >= 50 and enrollment::int < 100 then '50-99'
+	    when enrollment::int >= 100 and enrollment::int < 500 then '100-499'
 	    when enrollment::int >500 then '>500'
 	    else enrollment
     end as enrollment,
+    enrollment::int,
     trim(sex) as sex,
     trim(age) as age,
         case when trim(phases) = 'NA' then 'Not applicable'
