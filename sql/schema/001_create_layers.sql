@@ -1,0 +1,9 @@
+-- +goose Up
+CREATE SCHEMA IF NOT EXISTS bronze;
+CREATE SCHEMA IF NOT EXISTS silver;
+CREATE SCHEMA IF NOT EXISTS gold;
+
+-- +goose Down
+DROP SCHEMA bronze;
+DROP SCHEMA silver;
+DROP SCHEMA gold;
