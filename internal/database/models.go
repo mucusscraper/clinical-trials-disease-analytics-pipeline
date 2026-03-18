@@ -81,17 +81,25 @@ type SilverSponsor struct {
 }
 
 type SilverStudy struct {
-	ID             uuid.UUID
-	NctID          string
-	Condition      string
-	Title          sql.NullString
-	StudyType      sql.NullString
-	Phase          sql.NullString
-	Enrollment     sql.NullInt32
-	OverallStatus  sql.NullString
-	StartDate      sql.NullTime
-	CompletionDate sql.NullTime
-	HasResults     sql.NullBool
-	CreatedAt      time.Time
-	UpdatedAt      time.Time
+	ID                             uuid.UUID
+	NctID                          string
+	Condition                      string
+	Title                          sql.NullString
+	StudyType                      sql.NullString
+	Phase                          sql.NullString
+	Enrollment                     sql.NullInt32
+	OverallStatus                  sql.NullString
+	StartDate                      sql.NullTime
+	StartDatePrecision             sql.NullString
+	PrimaryCompletionDate          sql.NullTime
+	PrimaryCompletionDatePrecision sql.NullString
+	CompletionDate                 sql.NullTime
+	CompletionDatePrecision        sql.NullString
+	FirstSubmitDate                sql.NullTime
+	FirstSubmitDatePrecision       sql.NullString
+	LastUpdateSubmitDate           sql.NullTime
+	LastUpdateSubmitDatePrecision  sql.NullString
+	HasResults                     sql.NullBool
+	CreatedAt                      time.Time
+	UpdatedAt                      time.Time
 }

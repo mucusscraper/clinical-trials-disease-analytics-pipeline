@@ -357,18 +357,26 @@ INSERT INTO silver.studies (
     id,
     nct_id,
     condition,
-    title, 
-    study_type, 
-    phase, 
-    enrollment, 
-    overall_status, 
-    start_date, 
-    completion_date, 
-    has_results, 
-    created_at, 
+    title,
+    study_type,
+    phase,
+    enrollment,
+    overall_status,
+    start_date,
+    start_date_precision,
+    primary_completion_date,
+    primary_completion_date_precision,
+    completion_date,
+    completion_date_precision,
+    first_submit_date,
+    first_submit_date_precision,
+    last_update_submit_date,
+    last_update_submit_date_precision,
+    has_results,
+    created_at,
     updated_at
 )
-VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
+VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)
 ON CONFLICT (nct_id)
 DO UPDATE SET
     title = EXCLUDED.title,
@@ -380,23 +388,31 @@ DO UPDATE SET
     completion_date = EXCLUDED.completion_date,
     has_results = EXCLUDED.has_results,
     updated_at = now()
-RETURNING id, nct_id, condition, title, study_type, phase, enrollment, overall_status, start_date, completion_date, has_results, created_at, updated_at
+RETURNING id, nct_id, condition, title, study_type, phase, enrollment, overall_status, start_date, start_date_precision, primary_completion_date, primary_completion_date_precision, completion_date, completion_date_precision, first_submit_date, first_submit_date_precision, last_update_submit_date, last_update_submit_date_precision, has_results, created_at, updated_at
 `
 
 type CreateRowSilverUpsertStudiesParams struct {
-	ID             uuid.UUID
-	NctID          string
-	Condition      string
-	Title          sql.NullString
-	StudyType      sql.NullString
-	Phase          sql.NullString
-	Enrollment     sql.NullInt32
-	OverallStatus  sql.NullString
-	StartDate      sql.NullTime
-	CompletionDate sql.NullTime
-	HasResults     sql.NullBool
-	CreatedAt      time.Time
-	UpdatedAt      time.Time
+	ID                             uuid.UUID
+	NctID                          string
+	Condition                      string
+	Title                          sql.NullString
+	StudyType                      sql.NullString
+	Phase                          sql.NullString
+	Enrollment                     sql.NullInt32
+	OverallStatus                  sql.NullString
+	StartDate                      sql.NullTime
+	StartDatePrecision             sql.NullString
+	PrimaryCompletionDate          sql.NullTime
+	PrimaryCompletionDatePrecision sql.NullString
+	CompletionDate                 sql.NullTime
+	CompletionDatePrecision        sql.NullString
+	FirstSubmitDate                sql.NullTime
+	FirstSubmitDatePrecision       sql.NullString
+	LastUpdateSubmitDate           sql.NullTime
+	LastUpdateSubmitDatePrecision  sql.NullString
+	HasResults                     sql.NullBool
+	CreatedAt                      time.Time
+	UpdatedAt                      time.Time
 }
 
 func (q *Queries) CreateRowSilverUpsertStudies(ctx context.Context, arg CreateRowSilverUpsertStudiesParams) (SilverStudy, error) {
@@ -410,7 +426,15 @@ func (q *Queries) CreateRowSilverUpsertStudies(ctx context.Context, arg CreateRo
 		arg.Enrollment,
 		arg.OverallStatus,
 		arg.StartDate,
+		arg.StartDatePrecision,
+		arg.PrimaryCompletionDate,
+		arg.PrimaryCompletionDatePrecision,
 		arg.CompletionDate,
+		arg.CompletionDatePrecision,
+		arg.FirstSubmitDate,
+		arg.FirstSubmitDatePrecision,
+		arg.LastUpdateSubmitDate,
+		arg.LastUpdateSubmitDatePrecision,
 		arg.HasResults,
 		arg.CreatedAt,
 		arg.UpdatedAt,
@@ -426,7 +450,15 @@ func (q *Queries) CreateRowSilverUpsertStudies(ctx context.Context, arg CreateRo
 		&i.Enrollment,
 		&i.OverallStatus,
 		&i.StartDate,
+		&i.StartDatePrecision,
+		&i.PrimaryCompletionDate,
+		&i.PrimaryCompletionDatePrecision,
 		&i.CompletionDate,
+		&i.CompletionDatePrecision,
+		&i.FirstSubmitDate,
+		&i.FirstSubmitDatePrecision,
+		&i.LastUpdateSubmitDate,
+		&i.LastUpdateSubmitDatePrecision,
 		&i.HasResults,
 		&i.CreatedAt,
 		&i.UpdatedAt,
@@ -435,7 +467,7 @@ func (q *Queries) CreateRowSilverUpsertStudies(ctx context.Context, arg CreateRo
 }
 
 const getRowFromSilverStudiesByCondition = `-- name: GetRowFromSilverStudiesByCondition :one
-SELECT id, nct_id, condition, title, study_type, phase, enrollment, overall_status, start_date, completion_date, has_results, created_at, updated_at FROM silver.studies WHERE condition = $1
+SELECT id, nct_id, condition, title, study_type, phase, enrollment, overall_status, start_date, start_date_precision, primary_completion_date, primary_completion_date_precision, completion_date, completion_date_precision, first_submit_date, first_submit_date_precision, last_update_submit_date, last_update_submit_date_precision, has_results, created_at, updated_at FROM silver.studies WHERE condition = $1
 `
 
 func (q *Queries) GetRowFromSilverStudiesByCondition(ctx context.Context, condition string) (SilverStudy, error) {
@@ -451,7 +483,15 @@ func (q *Queries) GetRowFromSilverStudiesByCondition(ctx context.Context, condit
 		&i.Enrollment,
 		&i.OverallStatus,
 		&i.StartDate,
+		&i.StartDatePrecision,
+		&i.PrimaryCompletionDate,
+		&i.PrimaryCompletionDatePrecision,
 		&i.CompletionDate,
+		&i.CompletionDatePrecision,
+		&i.FirstSubmitDate,
+		&i.FirstSubmitDatePrecision,
+		&i.LastUpdateSubmitDate,
+		&i.LastUpdateSubmitDatePrecision,
 		&i.HasResults,
 		&i.CreatedAt,
 		&i.UpdatedAt,
@@ -460,7 +500,7 @@ func (q *Queries) GetRowFromSilverStudiesByCondition(ctx context.Context, condit
 }
 
 const getRowFromSilverStudiesByID = `-- name: GetRowFromSilverStudiesByID :one
-SELECT id, nct_id, condition, title, study_type, phase, enrollment, overall_status, start_date, completion_date, has_results, created_at, updated_at FROM silver.studies WHERE id = $1
+SELECT id, nct_id, condition, title, study_type, phase, enrollment, overall_status, start_date, start_date_precision, primary_completion_date, primary_completion_date_precision, completion_date, completion_date_precision, first_submit_date, first_submit_date_precision, last_update_submit_date, last_update_submit_date_precision, has_results, created_at, updated_at FROM silver.studies WHERE id = $1
 `
 
 func (q *Queries) GetRowFromSilverStudiesByID(ctx context.Context, id uuid.UUID) (SilverStudy, error) {
@@ -476,7 +516,15 @@ func (q *Queries) GetRowFromSilverStudiesByID(ctx context.Context, id uuid.UUID)
 		&i.Enrollment,
 		&i.OverallStatus,
 		&i.StartDate,
+		&i.StartDatePrecision,
+		&i.PrimaryCompletionDate,
+		&i.PrimaryCompletionDatePrecision,
 		&i.CompletionDate,
+		&i.CompletionDatePrecision,
+		&i.FirstSubmitDate,
+		&i.FirstSubmitDatePrecision,
+		&i.LastUpdateSubmitDate,
+		&i.LastUpdateSubmitDatePrecision,
 		&i.HasResults,
 		&i.CreatedAt,
 		&i.UpdatedAt,
@@ -485,7 +533,7 @@ func (q *Queries) GetRowFromSilverStudiesByID(ctx context.Context, id uuid.UUID)
 }
 
 const getRowFromSilverStudiesByNCTID = `-- name: GetRowFromSilverStudiesByNCTID :one
-SELECT id, nct_id, condition, title, study_type, phase, enrollment, overall_status, start_date, completion_date, has_results, created_at, updated_at FROM silver.studies WHERE nct_id = $1
+SELECT id, nct_id, condition, title, study_type, phase, enrollment, overall_status, start_date, start_date_precision, primary_completion_date, primary_completion_date_precision, completion_date, completion_date_precision, first_submit_date, first_submit_date_precision, last_update_submit_date, last_update_submit_date_precision, has_results, created_at, updated_at FROM silver.studies WHERE nct_id = $1
 `
 
 func (q *Queries) GetRowFromSilverStudiesByNCTID(ctx context.Context, nctID string) (SilverStudy, error) {
@@ -501,7 +549,15 @@ func (q *Queries) GetRowFromSilverStudiesByNCTID(ctx context.Context, nctID stri
 		&i.Enrollment,
 		&i.OverallStatus,
 		&i.StartDate,
+		&i.StartDatePrecision,
+		&i.PrimaryCompletionDate,
+		&i.PrimaryCompletionDatePrecision,
 		&i.CompletionDate,
+		&i.CompletionDatePrecision,
+		&i.FirstSubmitDate,
+		&i.FirstSubmitDatePrecision,
+		&i.LastUpdateSubmitDate,
+		&i.LastUpdateSubmitDatePrecision,
 		&i.HasResults,
 		&i.CreatedAt,
 		&i.UpdatedAt,

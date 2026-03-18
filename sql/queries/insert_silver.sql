@@ -3,18 +3,26 @@ INSERT INTO silver.studies (
     id,
     nct_id,
     condition,
-    title, 
-    study_type, 
-    phase, 
-    enrollment, 
-    overall_status, 
-    start_date, 
-    completion_date, 
-    has_results, 
-    created_at, 
+    title,
+    study_type,
+    phase,
+    enrollment,
+    overall_status,
+    start_date,
+    start_date_precision,
+    primary_completion_date,
+    primary_completion_date_precision,
+    completion_date,
+    completion_date_precision,
+    first_submit_date,
+    first_submit_date_precision,
+    last_update_submit_date,
+    last_update_submit_date_precision,
+    has_results,
+    created_at,
     updated_at
 )
-VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
+VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)
 ON CONFLICT (nct_id)
 DO UPDATE SET
     title = EXCLUDED.title,
