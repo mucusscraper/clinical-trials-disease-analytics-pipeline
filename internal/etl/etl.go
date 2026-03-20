@@ -41,7 +41,6 @@ func (state *State) InsertBronze(ctx context.Context, study api.Studies, conditi
 func (state *State) InsertSilver(ctx context.Context, study api.Studies, condition string) error {
 	now := time.Now()
 	NCTID := study.ProtocolSection.IdentificationModule.NctId
-	Condition := condition
 	Title := study.ProtocolSection.IdentificationModule.OfficialTitle
 	StudyType := study.ProtocolSection.DesignModule.StudyType
 	Phase := strings.Join(study.ProtocolSection.DesignModule.Phases, "|")
@@ -63,7 +62,7 @@ func (state *State) InsertSilver(ctx context.Context, study api.Studies, conditi
 		study.ProtocolSection.StatusModule.ExpandedAcessInfo.LastUpdateSubmitDate,
 	)
 	HasResults := study.HasResults
-	_, err := state.db.CreateRowSilverUpsertStudies(ctx, database.CreateRowSilverUpsertStudiesParams{
+	SilverStudyRow, err := state.db.CreateRowSilverUpsertStudies(ctx, database.CreateRowSilverUpsertStudiesParams{
 		ID:        uuid.New(),
 		NctID:     NCTID,
 		Condition: condition,
@@ -134,6 +133,27 @@ func (state *State) InsertSilver(ctx context.Context, study api.Studies, conditi
 		CreatedAt: now,
 		UpdatedAt: now,
 	})
+	if err != nil {
+		return fmt.Errorf("Error : %w", err)
+	}
+	LeadSponsor := study.ProtocolSection.SponsorCollaboratorsModule.LeadSponsor
+	if LeadSponsor.Name != "" {
+		_, err = state.db.CreateRowSilverSponsors(ctx, database.CreateRowSilverSponsorsParams{
+			ID:      uuid.New(),
+			StudyID: SilverStudyRow.ID,
+			Name:    LeadSponsor.Name,
+			Class: sql.NullString{
+				String: LeadSponsor.Class,
+				Valid:  LeadSponsor.Class != "",
+			},
+			CreatedAt: now,
+			UpdatedAt: now,
+		})
+		if err != nil {
+			return fmt.Errorf("Error creating lead sponsors: %w", err)
+		}
+	}
+	return nil
 }
 
 func normalizeDate(input string) (time.Time, string, bool) {
