@@ -21,11 +21,35 @@ type BronzeStudy struct {
 	UpdatedAt time.Time
 }
 
+type GoldStudiesByPhaseOverTime struct {
+	Year         int64
+	Phase        sql.NullString
+	TotalStudies int64
+}
+
 type SilverCollaborator struct {
 	ID        uuid.UUID
 	StudyID   uuid.UUID
 	Name      string
 	Class     sql.NullString
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
+type SilverDesignDetail struct {
+	StudyID           uuid.UUID
+	Allocation        sql.NullString
+	InterventionModel sql.NullString
+	PrimaryPurpose    sql.NullString
+	Masking           sql.NullString
+	CreatedAt         time.Time
+	UpdatedAt         time.Time
+}
+
+type SilverEligibility struct {
+	StudyID   uuid.UUID
+	Sex       sql.NullString
+	StdAges   sql.NullString
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
@@ -55,6 +79,7 @@ type SilverLocation struct {
 type SilverOutcome struct {
 	ID        uuid.UUID
 	StudyID   uuid.UUID
+	Type      string
 	Measure   string
 	Timeframe sql.NullString
 	CreatedAt time.Time
@@ -71,8 +96,17 @@ type SilverReference struct {
 	UpdatedAt time.Time
 }
 
+type SilverResponsibleParty struct {
+	StudyID                 uuid.UUID
+	Type                    sql.NullString
+	InvestigatorName        sql.NullString
+	InvestigatorTitle       sql.NullString
+	InvestigatorAffiliation sql.NullString
+	CreatedAt               time.Time
+	UpdatedAt               time.Time
+}
+
 type SilverSponsor struct {
-	ID        uuid.UUID
 	StudyID   uuid.UUID
 	Name      string
 	Class     sql.NullString
@@ -88,7 +122,6 @@ type SilverStudy struct {
 	StudyType                      sql.NullString
 	Phase                          sql.NullString
 	Enrollment                     sql.NullInt32
-	OverallStatus                  sql.NullString
 	StartDate                      sql.NullTime
 	StartDatePrecision             sql.NullString
 	PrimaryCompletionDate          sql.NullTime
@@ -102,4 +135,14 @@ type SilverStudy struct {
 	HasResults                     sql.NullBool
 	CreatedAt                      time.Time
 	UpdatedAt                      time.Time
+}
+
+type SilverStudyStatusDetail struct {
+	StudyID                     uuid.UUID
+	OverallStatus               sql.NullString
+	WhyStopped                  sql.NullString
+	StatusVerifiedDate          sql.NullTime
+	StatusVerifiedDatePrecision sql.NullString
+	CreatedAt                   time.Time
+	UpdatedAt                   time.Time
 }

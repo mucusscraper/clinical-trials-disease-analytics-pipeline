@@ -29,13 +29,9 @@ type IdentificationModule struct {
 }
 
 type StatusModule struct {
-	StatusVerifiedDate string            `json:"statusVerifiedDate"`
-	OverAllStatus      string            `json:"overallStatus"`
-	WhyStopped         string            `json:"whyStopped"`
-	ExpandedAcessInfo  ExpandedAcessInfo `json:"expandedAcessInfo"`
-}
-
-type ExpandedAcessInfo struct {
+	StatusVerifiedDate          string                      `json:"statusVerifiedDate"`
+	OverAllStatus               string                      `json:"overallStatus"`
+	WhyStopped                  string                      `json:"whyStopped"`
 	StartDateStruct             StartDateStruct             `json:"startDateStruct"`
 	PrimaryCompletionDateStruct PrimaryCompletionDateStruct `json:"primaryCompletionDateStruct"`
 	CompletionDateStruct        CompletionDateStruct        `json:"completionDateStruct"`
