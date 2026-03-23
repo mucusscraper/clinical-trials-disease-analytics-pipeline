@@ -50,23 +50,36 @@ func RunListMode(ctx context.Context, state *etl.State) {
 }
 
 func RunReportMode(ctx context.Context, state *etl.State) {
-	fmt.Println("Entering REPORT mode -> type 'done' to leave)")
+	fmt.Println("Entering REPORT mode -> type 'done' to leave -> (MAX OF 2 CONDITIONS FOR REPORT)")
+	var Conditions []string
+	scanner := bufio.NewScanner(os.Stdin)
 	for {
 		fmt.Print("report> ")
-		var Conditions []string
-		scanner := bufio.NewScanner(os.Stdin)
 		if scanner.Scan() {
 			all_string := scanner.Text()
-			if strings.TrimSpace(strings.ToLower(all_string)) == "done" {
-				cmd := exec.Command("python3", "reports/scripts/generate_reports.py", "--conditions", strings.Join(Conditions, " ||| "))
-				_, err := cmd.CombinedOutput()
-				if err != nil {
-					fmt.Println("Error:", err)
+			caser := cases.Title(language.English)
+			clean_string := caser.String((strings.TrimSpace(strings.ToLower(all_string))))
+			if strings.ToLower(all_string) == "done" {
+				if len(Conditions) == 0 {
+					fmt.Println("No conditions provided")
+					continue
 				}
-				break
+				if len(Conditions) > 2 {
+					fmt.Println("You can only add up to 2 conditions")
+				} else {
+					cmd := exec.Command("python3", "reports/scripts/generate_reports.py", "--conditions", strings.Join(Conditions, "|||"))
+					output, err := cmd.CombinedOutput()
+					fmt.Println(string(output))
+					if err != nil {
+						fmt.Printf("Error: %v\n", err)
+						break
+					}
+					fmt.Println("New report created")
+					break
+				}
+			} else {
+				Conditions = append(Conditions, clean_string)
 			}
-			strings.TrimSpace(strings.ToLower(all_string))
-			Conditions = append(Conditions, all_string)
 		}
 	}
 }

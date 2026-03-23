@@ -6,8 +6,32 @@
 
 <h1>Clinical Trials Report</h1>
 
-<h2>Studies by Phase Over Time</h2>
-<img src="../plots/studies_by_phase.png">
+<p><strong>Conditions:</strong> {{ conditions }}</p>
+<p><strong>Generated at:</strong> {{ generated_at }}</p>
+
+<h2>Total Studies Comparison</h2>
+{{ total_plot | safe }}
+
+<h2>Studies Over Time</h2>
+{{ time_plot | safe }}
+
+<h2>Global Distribution</h2>
+{{ country_plot | safe }}
+
+<h2>Intervention Types</h2>
+{{ intervention_plot | safe }}
+
+<h2>Enrollment Distribution</h2>
+{{ enrollment_plot | safe }}
+
+<h2>Results vs Status</h2>
+{{ results_plot | safe }}
+
+<h2>Collaborators</h2>
+{{ collab_plot | safe }}
+
+<h2>Study Design</h2>
+{{ design_plot | safe }}
 
 </body>
 </html>

@@ -3,7 +3,7 @@ CREATE OR REPLACE VIEW gold.studies_by_phase_over_time AS
 WITH cleaned AS (
     SELECT
         condition,
-        date_trunc('year', start_date) AS year,
+        date_trunc('year', start_date) AS start_year,
         CASE 
             WHEN phase IS NULL 
               OR trim(phase) = '' 
@@ -15,13 +15,17 @@ WITH cleaned AS (
 )
 SELECT
     condition,
-    year,
+    start_year,
     phase,
     COUNT(*) AS study_count
 FROM cleaned
-GROUP BY condition, year, phase
-ORDER BY condition, year, phase;
+GROUP BY condition, start_year, phase
+ORDER BY condition, start_year, phase;
 
+CREATE OR REPLACE VIEW gold.many_studies AS
+select count(distinct id) as total_studies, condition from silver.studies group by condition;
+
+-- “How many studies exist for each overall status and results availability by condition?”
 CREATE OR REPLACE VIEW gold.studies_by_has_results_and_overall AS
 SELECT
     s.condition,
@@ -36,6 +40,8 @@ LEFT JOIN silver.study_status_details ssd ON s.id = ssd.study_id
 GROUP BY s.condition, overall_status, s.has_results
 ORDER BY s.condition, total DESC;
 
+
+-- How many studies have at least one collaborator or no collaborator by condition?
 CREATE OR REPLACE VIEW gold.studies_collaborators_presence AS
 SELECT
     s.condition,
@@ -52,6 +58,7 @@ LEFT JOIN silver.collaborators c
 GROUP BY s.condition, collaborator_class
 ORDER BY s.condition, total_studies DESC;
 
+-- How many studies exists by combination of allocation, intervention model and primary purpose by condition
 CREATE OR REPLACE VIEW gold.studies_design_details AS
 select
 s.condition,
@@ -77,6 +84,8 @@ end as primary_purporse,
 	group by s.condition, allocation, intervention_model,primary_purpose
 order by s.condition,total_studies DESC;
 
+
+-- How many studies accept as sex parameter and age parameter by condition?
 CREATE OR REPLACE VIEW gold.eligibility AS
 select
 s.condition,
@@ -97,6 +106,7 @@ end as std_ages,
 	group by s.condition, sex, std_ages
 order by s.condition, total_studies desc;
 
+-- How many studies have at least one intervention of type X within a study type (interventional/observational)
 CREATE OR REPLACE VIEW gold.study_by_intervention_type AS
 select
 s.condition,
@@ -117,6 +127,8 @@ on i.study_id =s.id
 group by condition,study_type,type
 order by condition,total_studies DESC;
 
+
+-- How many studies have at least the country X in their participation
 CREATE OR REPLACE VIEW gold.country_participation AS
 select
 s.condition,
@@ -131,6 +143,8 @@ on l.study_id =s.id
 group by condition,country
 order by condition,total_studies DESC;
 
+-- How many studies exist for each enrollment class by condition
+-- How does the start year can be compared with enrollment class
 CREATE OR REPLACE VIEW gold.enrollment_phase_startdate AS
 select 
 condition,
@@ -171,3 +185,4 @@ DROP VIEW IF EXISTS gold.eligibility;
 DROP VIEW IF EXISTS gold.study_by_intervention_type;
 DROP VIEW IF EXISTS gold.country_participation;
 DROP VIEW IF EXISTS gold.enrollment_phase_startdate;
+DROP VIEW IF EXISTS gold.many_studies;

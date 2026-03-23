@@ -36,6 +36,7 @@ func main() {
 				fmt.Printf("%v\n", ConditionSaved)
 			}
 		} else if Mode == "report" {
+			cli.RunReportMode(ctx, state)
 			continue
 		} else if Mode == "quit" {
 			fmt.Println("Exiting...")
