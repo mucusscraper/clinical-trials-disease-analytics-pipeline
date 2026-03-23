@@ -3,10 +3,8 @@ MIT License © 2026 Daniel Lacerda Oliveira
 
 # Clinical Trials Analyzer
 **End-to-end data pipeline for clinical trials analytics with interactive reporting**
-<p align="center">
-  <img src="reports/assets/newplot.png" width="45%" />
-  <img src="reports/assets/newplot(1).png" width="45%" />
-</p>
+![Report Preview](reports/assets/newplot.png)
+![Report Preview](reports/assets/newplot2.png)
 
 Clinical Trials Analyzer is an interactive Command-Line Interface (CLI) tool built in Go that automates the extraction, transformation, and analysis of clinical trials data.
 
