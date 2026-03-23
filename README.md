@@ -49,11 +49,11 @@ git clone https://github.com/mucusscraper/clinical-trials-disease-analytics-pipe
 cd clinical-trials-disease-analytics-pipeline
 ```
 ### 2. Installing Python dependencies and Goose for database migrations
-Run:
+Install Python's necessary dependencies:
 ```bash
 pip install -r requirements.txt
 ```
-and:
+and install Goose for the Database migrations:
 ```bash
 go install github.com/pressly/goose/v3/cmd/goose@latest
 ```
@@ -66,13 +66,13 @@ DATABASE_URL=postgres://{username}:{password}@localhost:5432/clinical_trials?ssl
 and create a Database in PostgreSQL named "clinical_trials".
 
 ### 4. Setup database schema
-Run:
+Execute the Database migrations:
 ```bash
 goose -dir sql/schema postgres "postgres://{username}:{password}@localhost:5432/clinical_trials?sslmode=disable" up
 ```
 
 ### 5. Build the CLI
-Run:
+Execute to build:
 ```bash
 go build -o trial-analyzer ./cmd/trial-analyzer
 ```
@@ -94,7 +94,7 @@ quit    → Exit the program
 ```
 
 ### Example Workflow
-1. Fetch data
+#### 1. Fetch data
 ```bash
 fetch
 ```
@@ -104,11 +104,11 @@ Trachoma
 Right Ventricular Dysfunction
 done
 ``` 
-2. List stored conditions
+#### 2. List stored conditions
 ```bash
 list
 ``` 
-3. Generate Report
+#### 3. Generate Report
 ```bash
 report
 ```
@@ -118,7 +118,7 @@ Trachoma
 Right Ventricular Dysfunction
 done
 ```
-4. View Report
+#### 4. View Report
 The tool generates interactive HTML dashboards located in:
 ```bash
 reports/outputs/
