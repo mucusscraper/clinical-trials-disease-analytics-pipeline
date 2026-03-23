@@ -41,6 +41,31 @@ func main() {
 		} else if Mode == "quit" {
 			fmt.Println("Exiting...")
 			break
+		} else if Mode == "help" {
+			fmt.Println("\n########### HELP - Clinical Trials Analyzer ###########\n")
+			fmt.Print("Available commands:\n")
+			fmt.Println("fetch")
+			fmt.Println("  -> Fetch clinical trials data from the API and store it in the database.")
+			fmt.Println("  -> You will be prompted to enter a condition (e.g., 'Trachoma').")
+			fmt.Println("  -> Type 'done' when finished selecting conditions.\n")
+
+			fmt.Println("list")
+			fmt.Println("  -> List all conditions that have already been fetched and stored.\n")
+
+			fmt.Println("report")
+			fmt.Println("  -> Generate an interactive HTML report based on selected conditions.")
+			fmt.Println("  -> You can input up to 2 conditions.")
+			fmt.Println("  -> Type 'done' when finished selecting conditions.\n")
+
+			fmt.Println("help")
+			fmt.Println("  -> Display this help message.\n")
+
+			fmt.Println("quit")
+			fmt.Println("  -> Exit the application.\n")
+
+			fmt.Println("#######################################################\n")
+		} else {
+			fmt.Println("Command not found")
 		}
 	}
 }

@@ -1,0 +1,7 @@
+psycopg2-binary
+pandas
+python-dotenv
+jinja2
+plotly
+seaborn
+matplotlib
