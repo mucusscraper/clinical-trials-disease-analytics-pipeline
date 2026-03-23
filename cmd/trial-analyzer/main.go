@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	api "github.com/mucusscraper/clinical-trials-disease-analytics-pipeline/internal/api"
 	cli "github.com/mucusscraper/clinical-trials-disease-analytics-pipeline/internal/cli"
 	database "github.com/mucusscraper/clinical-trials-disease-analytics-pipeline/internal/database"
 	etl "github.com/mucusscraper/clinical-trials-disease-analytics-pipeline/internal/etl"
@@ -21,11 +20,26 @@ func main() {
 	state := &etl.State{
 		DB: queries,
 	}
-	Conditions := cli.CLI()
-	Results := api.FetchStudies(Conditions)
-	err = state.Run(ctx, Results)
-	if err != nil {
-		panic(err)
+	fmt.Printf("########### Clinical Trials Analyzer ###########\n")
+	fmt.Printf("Commands: 'fetch' , 'report' , 'list' , 'quit' , 'help'\n")
+	for {
+		Mode := cli.CLI()
+		if Mode == "fetch" {
+			cli.RunFetchMode(ctx, state)
+			continue
+		} else if Mode == "list" {
+			ConditionsSaved, err := state.DB.GetFetchedConditions(ctx)
+			if err != nil {
+				panic(err)
+			}
+			for _, ConditionSaved := range ConditionsSaved {
+				fmt.Printf("%v\n", ConditionSaved)
+			}
+		} else if Mode == "report" {
+			continue
+		} else if Mode == "quit" {
+			fmt.Println("Exiting...")
+			break
+		}
 	}
-	fmt.Println("Executed pipeline")
 }

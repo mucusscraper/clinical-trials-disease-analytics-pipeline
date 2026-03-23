@@ -22,9 +22,10 @@ type BronzeStudy struct {
 }
 
 type GoldStudiesByPhaseOverTime struct {
-	Year         int64
-	Phase        sql.NullString
-	TotalStudies int64
+	Condition  string
+	Year       int64
+	Phase      interface{}
+	StudyCount int64
 }
 
 type SilverCollaborator struct {

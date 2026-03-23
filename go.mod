@@ -7,4 +7,5 @@ require (
 	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/lib/pq v1.11.2 // indirect
 	github.com/sqlc-dev/pqtype v0.3.0 // indirect
+	golang.org/x/text v0.35.0 // indirect
 )
