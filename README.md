@@ -149,4 +149,7 @@ Also, you are welcome to open issues or contact me so we can discuss about ideas
 ## 💡 Future Improvements
 - Docker support for reproducible environments  
 - Parallelized API requests for faster data ingestion  
-- Web-based dashboard (Streamlit or FastAPI)  
+- Web-based dashboard (Streamlit or FastAPI)
+---
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/daniel-oliveira-30785b1ba)
