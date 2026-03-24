@@ -61,7 +61,7 @@ go install github.com/pressly/goose/v3/cmd/goose@latest
 ### 3. Configure the Database
 Create a .env file:
 ```bash
-DATABASE_URL=postgres://{username}:{password}@localhost:5432/clinical_trials?sslmode=disable
+DATABASE_URL=postgresql://{username}:{password}@localhost:5432/clinical_trials?sslmode=disable
 ```
 and create a Database in PostgreSQL named "clinical_trials".
 

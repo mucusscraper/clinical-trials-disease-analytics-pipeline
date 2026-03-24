@@ -390,6 +390,7 @@ func normalizeDate(input string) (time.Time, string, bool) {
 
 func (state *State) Run(ctx context.Context, results map[string][]api.ApiResponseClinicalTrials) error {
 	for condition, responses := range results {
+		fmt.Printf("PosgreSQL: Bronze and Silver Layers and Gold Views for %s: processing\n", condition)
 		for _, response := range responses {
 			for _, study := range response.Studies {
 				err := state.InsertBronze(ctx, study, condition)
@@ -402,6 +403,7 @@ func (state *State) Run(ctx context.Context, results map[string][]api.ApiRespons
 				}
 			}
 		}
+		fmt.Printf("PostgreSQL: Bronze and Silver Layers and Gold Views for %s: done\n", condition)
 	}
 	return nil
 }
