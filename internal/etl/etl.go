@@ -41,7 +41,6 @@ func (state *State) InsertBronze(ctx context.Context, study api.Studies, conditi
 func (state *State) InsertSilver(ctx context.Context, study api.Studies, condition string) error {
 	now := time.Now()
 	NCTID := study.ProtocolSection.IdentificationModule.NctId
-	Title := study.ProtocolSection.IdentificationModule.OfficialTitle
 	StudyType := study.ProtocolSection.DesignModule.StudyType
 	Phase := strings.Join(study.ProtocolSection.DesignModule.Phases, "|")
 	Enrollment := study.ProtocolSection.DesignModule.EnrollmentInfo.Count
@@ -65,10 +64,6 @@ func (state *State) InsertSilver(ctx context.Context, study api.Studies, conditi
 		ID:        uuid.New(),
 		NctID:     NCTID,
 		Condition: condition,
-		Title: sql.NullString{
-			String: Title,
-			Valid:  Title != "",
-		},
 		StudyType: sql.NullString{
 			String: StudyType,
 			Valid:  StudyType != "",
@@ -247,29 +242,6 @@ func (state *State) InsertSilver(ctx context.Context, study api.Studies, conditi
 			return fmt.Errorf("Error creating outcomes: %w", err)
 		}
 	}
-	for _, Reference := range study.ProtocolSection.ReferencesModule.References {
-		_, err := state.DB.CreateRowSilverReferences(ctx, database.CreateRowSilverReferencesParams{
-			ID:      uuid.New(),
-			StudyID: SilverStudyRow.ID,
-			Pmid: sql.NullString{
-				String: Reference.Pmid,
-				Valid:  Reference.Pmid != "",
-			},
-			Type: sql.NullString{
-				String: Reference.Type,
-				Valid:  Reference.Type != "",
-			},
-			Citation: sql.NullString{
-				String: Reference.Citation,
-				Valid:  Reference.Citation != "",
-			},
-			CreatedAt: now,
-			UpdatedAt: now,
-		})
-		if err != nil {
-			return fmt.Errorf("Error creating references: %w", err)
-		}
-	}
 	_, err = state.DB.CreateRowSilverEligibility(ctx, database.CreateRowSilverEligibilityParams{
 		StudyID: SilverStudyRow.ID,
 		Sex: sql.NullString{
@@ -390,7 +362,7 @@ func normalizeDate(input string) (time.Time, string, bool) {
 
 func (state *State) Run(ctx context.Context, results map[string][]api.ApiResponseClinicalTrials) error {
 	for condition, responses := range results {
-		fmt.Printf("PosgreSQL: Bronze and Silver Layers and Gold Views for %s: processing\n", condition)
+		fmt.Printf("PostgreSQL: Bronze and Silver Layers and Gold Views for %s: processing\n", condition)
 		for _, response := range responses {
 			for _, study := range response.Studies {
 				err := state.InsertBronze(ctx, study, condition)

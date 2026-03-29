@@ -3,7 +3,6 @@ INSERT INTO silver.studies (
     id,
     nct_id,
     condition,
-    title,
     study_type,
     phase,
     enrollment,
@@ -21,10 +20,9 @@ INSERT INTO silver.studies (
     created_at,
     updated_at
 )
-VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)
+VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19)
 ON CONFLICT (nct_id)
 DO UPDATE SET
-    title = EXCLUDED.title,
     study_type = EXCLUDED.study_type,
     phase = EXCLUDED.phase,
     enrollment = EXCLUDED.enrollment,
@@ -170,29 +168,6 @@ DO UPDATE SET
     updated_at=now()
 RETURNING *;
 
--- name: CreateRowSilverReferences :one
-INSERT INTO silver.references(id,
-study_id,
-pmid,
-type,
-citation,
-created_at, 
-updated_at)
-VALUES (
-    $1,
-    $2,
-    $3,
-    $4,
-    $5,
-    $6,
-    $7
-)
-ON CONFLICT (study_id, citation)
-DO UPDATE SET 
-    pmid=EXCLUDED.pmid,
-    type=EXCLUDED.type,
-    updated_at=now()
-RETURNING *;
 
 -- name: CreateRowSilverEligibility :one
 INSERT INTO silver.eligibility(study_id,

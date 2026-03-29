@@ -21,11 +21,67 @@ type BronzeStudy struct {
 	UpdatedAt time.Time
 }
 
+type GoldCountryParticipation struct {
+	Condition    string
+	Country      interface{}
+	TotalStudies int64
+}
+
+type GoldEligibility struct {
+	Condition    string
+	Sex          interface{}
+	StdAges      interface{}
+	TotalStudies int64
+}
+
+type GoldEnrollmentPhaseStartdate struct {
+	Condition            string
+	Enrollment           sql.NullInt32
+	EnrollmentClass      interface{}
+	EnrollmentClassOrder interface{}
+	Phase                interface{}
+	StartDate            sql.NullTime
+	Year                 int64
+}
+
+type GoldManyStudy struct {
+	TotalStudies int64
+	Condition    string
+}
+
+type GoldStudiesByHasResultsAndOverall struct {
+	Condition     string
+	OverallStatus interface{}
+	HasResults    sql.NullBool
+	Total         int64
+}
+
 type GoldStudiesByPhaseOverTime struct {
 	Condition  string
-	Year       int64
+	StartYear  int64
 	Phase      interface{}
 	StudyCount int64
+}
+
+type GoldStudiesCollaboratorsPresence struct {
+	Condition         string
+	CollaboratorClass interface{}
+	TotalStudies      int64
+}
+
+type GoldStudiesDesignDetail struct {
+	Condition         string
+	Allocation        interface{}
+	InterventionModel interface{}
+	PrimaryPurporse   interface{}
+	TotalStudies      int64
+}
+
+type GoldStudyByInterventionType struct {
+	Condition    string
+	StudyType    interface{}
+	Type         interface{}
+	TotalStudies int64
 }
 
 type SilverCollaborator struct {
@@ -87,16 +143,6 @@ type SilverOutcome struct {
 	UpdatedAt time.Time
 }
 
-type SilverReference struct {
-	ID        uuid.UUID
-	StudyID   uuid.UUID
-	Pmid      sql.NullString
-	Type      sql.NullString
-	Citation  sql.NullString
-	CreatedAt time.Time
-	UpdatedAt time.Time
-}
-
 type SilverResponsibleParty struct {
 	StudyID                 uuid.UUID
 	Type                    sql.NullString
@@ -119,7 +165,6 @@ type SilverStudy struct {
 	ID                             uuid.UUID
 	NctID                          string
 	Condition                      string
-	Title                          sql.NullString
 	StudyType                      sql.NullString
 	Phase                          sql.NullString
 	Enrollment                     sql.NullInt32

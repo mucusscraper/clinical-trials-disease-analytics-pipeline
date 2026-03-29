@@ -355,64 +355,6 @@ func (q *Queries) CreateRowSilverOutcomes(ctx context.Context, arg CreateRowSilv
 	return i, err
 }
 
-const createRowSilverReferences = `-- name: CreateRowSilverReferences :one
-INSERT INTO silver.references(id,
-study_id,
-pmid,
-type,
-citation,
-created_at, 
-updated_at)
-VALUES (
-    $1,
-    $2,
-    $3,
-    $4,
-    $5,
-    $6,
-    $7
-)
-ON CONFLICT (study_id, citation)
-DO UPDATE SET 
-    pmid=EXCLUDED.pmid,
-    type=EXCLUDED.type,
-    updated_at=now()
-RETURNING id, study_id, pmid, type, citation, created_at, updated_at
-`
-
-type CreateRowSilverReferencesParams struct {
-	ID        uuid.UUID
-	StudyID   uuid.UUID
-	Pmid      sql.NullString
-	Type      sql.NullString
-	Citation  sql.NullString
-	CreatedAt time.Time
-	UpdatedAt time.Time
-}
-
-func (q *Queries) CreateRowSilverReferences(ctx context.Context, arg CreateRowSilverReferencesParams) (SilverReference, error) {
-	row := q.db.QueryRowContext(ctx, createRowSilverReferences,
-		arg.ID,
-		arg.StudyID,
-		arg.Pmid,
-		arg.Type,
-		arg.Citation,
-		arg.CreatedAt,
-		arg.UpdatedAt,
-	)
-	var i SilverReference
-	err := row.Scan(
-		&i.ID,
-		&i.StudyID,
-		&i.Pmid,
-		&i.Type,
-		&i.Citation,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-	)
-	return i, err
-}
-
 const createRowSilverResponsibleParties = `-- name: CreateRowSilverResponsibleParties :one
 INSERT INTO silver.responsible_parties(study_id,
 type,
@@ -585,7 +527,6 @@ INSERT INTO silver.studies (
     id,
     nct_id,
     condition,
-    title,
     study_type,
     phase,
     enrollment,
@@ -603,10 +544,9 @@ INSERT INTO silver.studies (
     created_at,
     updated_at
 )
-VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)
+VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19)
 ON CONFLICT (nct_id)
 DO UPDATE SET
-    title = EXCLUDED.title,
     study_type = EXCLUDED.study_type,
     phase = EXCLUDED.phase,
     enrollment = EXCLUDED.enrollment,
@@ -628,14 +568,13 @@ DO UPDATE SET
 
     has_results = EXCLUDED.has_results,
     updated_at = now()
-RETURNING id, nct_id, condition, title, study_type, phase, enrollment, start_date, start_date_precision, primary_completion_date, primary_completion_date_precision, completion_date, completion_date_precision, first_submit_date, first_submit_date_precision, last_update_submit_date, last_update_submit_date_precision, has_results, created_at, updated_at
+RETURNING id, nct_id, condition, study_type, phase, enrollment, start_date, start_date_precision, primary_completion_date, primary_completion_date_precision, completion_date, completion_date_precision, first_submit_date, first_submit_date_precision, last_update_submit_date, last_update_submit_date_precision, has_results, created_at, updated_at
 `
 
 type CreateRowSilverUpsertStudiesParams struct {
 	ID                             uuid.UUID
 	NctID                          string
 	Condition                      string
-	Title                          sql.NullString
 	StudyType                      sql.NullString
 	Phase                          sql.NullString
 	Enrollment                     sql.NullInt32
@@ -659,7 +598,6 @@ func (q *Queries) CreateRowSilverUpsertStudies(ctx context.Context, arg CreateRo
 		arg.ID,
 		arg.NctID,
 		arg.Condition,
-		arg.Title,
 		arg.StudyType,
 		arg.Phase,
 		arg.Enrollment,
@@ -682,7 +620,6 @@ func (q *Queries) CreateRowSilverUpsertStudies(ctx context.Context, arg CreateRo
 		&i.ID,
 		&i.NctID,
 		&i.Condition,
-		&i.Title,
 		&i.StudyType,
 		&i.Phase,
 		&i.Enrollment,
@@ -704,7 +641,7 @@ func (q *Queries) CreateRowSilverUpsertStudies(ctx context.Context, arg CreateRo
 }
 
 const getRowFromSilverStudiesByCondition = `-- name: GetRowFromSilverStudiesByCondition :one
-SELECT id, nct_id, condition, title, study_type, phase, enrollment, start_date, start_date_precision, primary_completion_date, primary_completion_date_precision, completion_date, completion_date_precision, first_submit_date, first_submit_date_precision, last_update_submit_date, last_update_submit_date_precision, has_results, created_at, updated_at FROM silver.studies WHERE condition = $1
+SELECT id, nct_id, condition, study_type, phase, enrollment, start_date, start_date_precision, primary_completion_date, primary_completion_date_precision, completion_date, completion_date_precision, first_submit_date, first_submit_date_precision, last_update_submit_date, last_update_submit_date_precision, has_results, created_at, updated_at FROM silver.studies WHERE condition = $1
 `
 
 func (q *Queries) GetRowFromSilverStudiesByCondition(ctx context.Context, condition string) (SilverStudy, error) {
@@ -714,7 +651,6 @@ func (q *Queries) GetRowFromSilverStudiesByCondition(ctx context.Context, condit
 		&i.ID,
 		&i.NctID,
 		&i.Condition,
-		&i.Title,
 		&i.StudyType,
 		&i.Phase,
 		&i.Enrollment,
@@ -736,7 +672,7 @@ func (q *Queries) GetRowFromSilverStudiesByCondition(ctx context.Context, condit
 }
 
 const getRowFromSilverStudiesByID = `-- name: GetRowFromSilverStudiesByID :one
-SELECT id, nct_id, condition, title, study_type, phase, enrollment, start_date, start_date_precision, primary_completion_date, primary_completion_date_precision, completion_date, completion_date_precision, first_submit_date, first_submit_date_precision, last_update_submit_date, last_update_submit_date_precision, has_results, created_at, updated_at FROM silver.studies WHERE id = $1
+SELECT id, nct_id, condition, study_type, phase, enrollment, start_date, start_date_precision, primary_completion_date, primary_completion_date_precision, completion_date, completion_date_precision, first_submit_date, first_submit_date_precision, last_update_submit_date, last_update_submit_date_precision, has_results, created_at, updated_at FROM silver.studies WHERE id = $1
 `
 
 func (q *Queries) GetRowFromSilverStudiesByID(ctx context.Context, id uuid.UUID) (SilverStudy, error) {
@@ -746,7 +682,6 @@ func (q *Queries) GetRowFromSilverStudiesByID(ctx context.Context, id uuid.UUID)
 		&i.ID,
 		&i.NctID,
 		&i.Condition,
-		&i.Title,
 		&i.StudyType,
 		&i.Phase,
 		&i.Enrollment,
@@ -768,7 +703,7 @@ func (q *Queries) GetRowFromSilverStudiesByID(ctx context.Context, id uuid.UUID)
 }
 
 const getRowFromSilverStudiesByNCTID = `-- name: GetRowFromSilverStudiesByNCTID :one
-SELECT id, nct_id, condition, title, study_type, phase, enrollment, start_date, start_date_precision, primary_completion_date, primary_completion_date_precision, completion_date, completion_date_precision, first_submit_date, first_submit_date_precision, last_update_submit_date, last_update_submit_date_precision, has_results, created_at, updated_at FROM silver.studies WHERE nct_id = $1
+SELECT id, nct_id, condition, study_type, phase, enrollment, start_date, start_date_precision, primary_completion_date, primary_completion_date_precision, completion_date, completion_date_precision, first_submit_date, first_submit_date_precision, last_update_submit_date, last_update_submit_date_precision, has_results, created_at, updated_at FROM silver.studies WHERE nct_id = $1
 `
 
 func (q *Queries) GetRowFromSilverStudiesByNCTID(ctx context.Context, nctID string) (SilverStudy, error) {
@@ -778,7 +713,6 @@ func (q *Queries) GetRowFromSilverStudiesByNCTID(ctx context.Context, nctID stri
 		&i.ID,
 		&i.NctID,
 		&i.Condition,
-		&i.Title,
 		&i.StudyType,
 		&i.Phase,
 		&i.Enrollment,

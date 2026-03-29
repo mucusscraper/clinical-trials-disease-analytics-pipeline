@@ -3,7 +3,6 @@ CREATE TABLE silver.studies (
     id UUID PRIMARY KEY,
     nct_id TEXT UNIQUE NOT NULL,
     condition TEXT NOT NULL,
-    title TEXT,
     study_type TEXT,
     phase TEXT,
     enrollment INT,
@@ -83,17 +82,6 @@ CREATE TABLE silver.outcomes (
     )
 );
 
-CREATE TABLE silver.references (
-    id UUID PRIMARY KEY,
-    study_id UUID NOT NULL REFERENCES silver.studies(id),
-    pmid TEXT,
-    type TEXT,
-    citation TEXT,
-    created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL,
-    CONSTRAINT unique_reference_per_study
-    UNIQUE (study_id, citation)
-);
 
 CREATE TABLE silver.eligibility (
     study_id UUID PRIMARY KEY REFERENCES silver.studies(id),
@@ -139,7 +127,6 @@ DROP TABLE IF EXISTS silver.collaborators;
 DROP TABLE IF EXISTS silver.locations;
 DROP TABLE IF EXISTS silver.interventions;
 DROP TABLE IF EXISTS silver.outcomes;
-DROP TABLE IF EXISTS silver.references;
 DROP TABLE IF EXISTS silver.eligibility;
 DROP TABLE IF EXISTS silver.design_details;
 DROP TABLE IF EXISTS silver.responsible_parties;

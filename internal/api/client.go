@@ -24,7 +24,7 @@ func FetchStudies(Conditions []string) map[string][]ApiResponseClinicalTrials {
 		fmt.Printf("\n[%d-%d] Fetching condition: %v\n", i+1, len(Conditions), Condition)
 		params := url.Values{}
 		params.Add("query.cond", Condition)
-		params.Add("fields", "NCTId,OverallStatus,StartDate,StdAge,LocationCountry,LocationCity,BriefSummary,ResultsSection,Intervention,OutcomeMeasuresModule,OtherOutcome,SponsorCollaboratorsModule,Sex,StdAge,Phase,EnrollmentCount,Collaborator,DesignModule,OfficialTitle,StartDate,PrimaryCompletionDateStruct,CompletionDateStruct,StudyFirstPostDateStruct,ResultsFirstPostDateStruct,LastUpdatePostDateStruct,DocumentSection,ReferencesModule,StatusModule,LocationState,HasResults,InterventionType,InterventionName,PrimaryOutcome,SecondaryOutcome,OtherOutcome,Collaborator,ResultsFirstPostDate,LocationGeoPoint")
+		params.Add("fields", "NCTId,OverallStatus,StartDate,StdAge,LocationCountry,LocationCity,BriefSummary,ResultsSection,Intervention,OutcomeMeasuresModule,OtherOutcome,SponsorCollaboratorsModule,Sex,StdAge,Phase,EnrollmentCount,Collaborator,DesignModule,StartDate,PrimaryCompletionDateStruct,CompletionDateStruct,StudyFirstPostDateStruct,ResultsFirstPostDateStruct,LastUpdatePostDateStruct,DocumentSection,StatusModule,LocationState,HasResults,InterventionType,InterventionName,PrimaryOutcome,SecondaryOutcome,OtherOutcome,Collaborator,ResultsFirstPostDate,LocationGeoPoint")
 		u.RawQuery = params.Encode()
 		res, err := http.Get(u.String())
 		if err != nil {
@@ -47,7 +47,7 @@ func FetchStudies(Conditions []string) map[string][]ApiResponseClinicalTrials {
 		for {
 			params := url.Values{}
 			params.Add("query.cond", Condition)
-			params.Add("fields", "NCTId,OverallStatus,StartDate,StdAge,LocationCountry,LocationCity,BriefSummary,ResultsSection,Intervention,OutcomeMeasuresModule,OtherOutcome,SponsorCollaboratorsModule,Sex,StdAge,Phase,EnrollmentCount,Collaborator,DesignModule,OfficialTitle,StartDate,PrimaryCompletionDateStruct,CompletionDateStruct,StudyFirstPostDateStruct,ResultsFirstPostDateStruct,LastUpdatePostDateStruct,DocumentSection,ReferencesModule,StatusModule,LocationState,HasResults,InterventionType,InterventionName,PrimaryOutcome,SecondaryOutcome,OtherOutcome,Collaborator,ResultsFirstPostDate,LocationGeoPoint")
+			params.Add("fields", "NCTId,OverallStatus,StartDate,StdAge,LocationCountry,LocationCity,ResultsSection,Intervention,OutcomeMeasuresModule,OtherOutcome,SponsorCollaboratorsModule,Sex,StdAge,Phase,EnrollmentCount,Collaborator,DesignModule,OfficialTitle,StartDate,PrimaryCompletionDateStruct,CompletionDateStruct,StudyFirstPostDateStruct,ResultsFirstPostDateStruct,LastUpdatePostDateStruct,DocumentSection,StatusModule,LocationState,HasResults,InterventionType,InterventionName,PrimaryOutcome,SecondaryOutcome,OtherOutcome,Collaborator,ResultsFirstPostDate,LocationGeoPoint")
 			params.Add("pageToken", NextPageToken)
 			u.RawQuery = params.Encode()
 			res, err := http.Get(u.String())

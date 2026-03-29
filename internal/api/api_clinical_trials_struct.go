@@ -14,18 +14,18 @@ type ProtocolSection struct {
 	IdentificationModule       IdentificationModule       `json:"identificationModule"`
 	StatusModule               StatusModule               `json:"statusModule"`
 	SponsorCollaboratorsModule SponsorCollaboratorsModule `json:"sponsorCollaboratorsModule"`
-	DescriptionModule          DescriptionModule          `json:"descriptionModule"`
-	DesignModule               DesignModule               `json:"designModule"`
-	ArmsInterventionsModule    ArmsInterventionsModule    `json:"armsInterventionsModule"`
-	OutcomesModule             OutcomesModule             `json:"outcomesModule"`
-	EligibilityModule          EligibilityModule          `json:"eligibilityModule"`
-	ContactsLocationsModule    ContactsLocationsModule    `json:"contactsLocationsModule"`
-	ReferencesModule           ReferencesModule           `json:"referencesModule"`
+	// DescriptionModule          DescriptionModule          `json:"descriptionModule"`
+	DesignModule            DesignModule            `json:"designModule"`
+	ArmsInterventionsModule ArmsInterventionsModule `json:"armsInterventionsModule"`
+	OutcomesModule          OutcomesModule          `json:"outcomesModule"`
+	EligibilityModule       EligibilityModule       `json:"eligibilityModule"`
+	ContactsLocationsModule ContactsLocationsModule `json:"contactsLocationsModule"`
+	// ReferencesModule           ReferencesModule           `json:"referencesModule"`
 }
 
 type IdentificationModule struct {
-	NctId         string `json:"nctId"`
-	OfficialTitle string `json:"officialTitle"`
+	NctId string `json:"nctId"`
+	// OfficialTitle string `json:"officialTitle"`
 }
 
 type StatusModule struct {
@@ -84,9 +84,9 @@ type Collaborators struct {
 	Class string `json:"class"`
 }
 
-type DescriptionModule struct {
-	BriefSummary string `json:"briefSummary"`
-}
+// type DescriptionModule struct {
+// BriefSummary string `json:"briefSummary"`
+// }
 
 type DesignModule struct {
 	StudyType      string         `json:"studyType"`
@@ -157,12 +157,12 @@ type GeoPoint struct {
 	Longitude float64 `json:"lon"`
 }
 
-type ReferencesModule struct {
-	References []Reference `json:"references"`
-}
+// type ReferencesModule struct {
+// References []Reference `json:"references"`
+// }
 
-type Reference struct {
-	Pmid     string `json:"pmid"`
-	Type     string `json:"type"`
-	Citation string `json:"citation"`
-}
+// type Reference struct {
+// Pmid     string `json:"pmid"`
+// Type     string `json:"type"`
+// Citation string `json:"citation"`
+// }
