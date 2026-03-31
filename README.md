@@ -35,7 +35,37 @@ The project follows a modern data engineering structure:
 - Jinja2 → HTML templating
 
 ## 🚀 Quick Start
-### Requirements
+### Option 1 - Docker (recommended)
+This is the easiest way to run the project with all dependencies pre-configured.
+- [Docker] (https://www.docker.com/)
+
+### 1. Clone the repository
+After installing the software above, navigate to the folder where you would like to install Clinical Trials Analyzer and run:
+```bash
+git clone https://github.com/mucusscraper/clinical-trials-disease-analytics-pipeline.git
+cd clinical-trials-disease-analytics-pipeline
+```
+
+### 2. Build the project and start PostgreSQL
+```bash
+make build
+```
+```bash
+make up
+```
+
+### 3. Run CLI
+```bash
+make run
+```
+
+### Extra
+To stop the PostgreSQL container from running at the background:
+```bash
+make down
+```
+
+### Option 2 - Local Setup
 Before using Clinical Trials Analyzer, it's necessary to install some dependencies:
 
 - [GO 1.20+](https://go.dev/)
@@ -61,14 +91,14 @@ go install github.com/pressly/goose/v3/cmd/goose@latest
 ### 3. Configure the Database
 Create a .env file:
 ```bash
-DATABASE_URL=postgresql://{username}:{password}@localhost:5432/clinical_trials?sslmode=disable
+DATABASE_URL=postgresql://{username}:{password}@postgres:5432/clinical_trials?sslmode=disable
 ```
 and create a Database in PostgreSQL named "clinical_trials".
 
 ### 4. Setup database schema
 Execute the Database migrations:
 ```bash
-goose -dir sql/schema postgres "postgres://{username}:{password}@localhost:5432/clinical_trials?sslmode=disable" up
+goose -dir sql/schema postgres "postgres://{username}:{password}@postgres:5432/clinical_trials?sslmode=disable" up
 ```
 
 ### 5. Build the CLI
