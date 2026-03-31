@@ -1,0 +1,56 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres_db
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=clinical_trials
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  
+  migrations:
+    image: golang:1.25-alpine
+    depends_on:
+      - postgres
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: >
+      sh -c "go install github.com/pressly/goose/v3/cmd/goose@latest &&
+      goose -dir sql/schema postgres 'postgresql://admin:admin@postgres:5432/clinical_trials?sslmode=disable' up"
+    profiles:
+      - migrations
+  go-cli:
+    build:
+      context: .
+      dockerfile: Dockerfile.go
+    container_name: go_app
+    depends_on:
+      - postgres
+    environment:
+      - DB_HOST=postgres
+      - DB_USER=admin
+      - DB_PASSWORD=admin
+      - DB_NAME=clinical_trials
+    stdin_open: true
+    tty: true
+    profiles:
+      - cli
+  python-reports:
+    build:
+      context: .
+      dockerfile: Dockerfile.py
+    container_name: python_reports
+    depends_on:
+      - postgres
+    environment:
+      - DB_HOST=postgres
+      - DB_USER=admin
+      - DB_PASSWORD=admin
+      - DB_NAME=clinical_trials
+
+volumes:
+  postgres_data:
