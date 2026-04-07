@@ -1,0 +1,39 @@
+name: cd
+
+on:
+  push:
+    branches: [main]
+    tags: 
+      - 'v[0-9].[0-9]+.[0-9]'
+
+jobs:
+  docker:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+
+      - name: Configurar a tag git mais recente
+        run: |
+          RAW_TAG="${GITHUB_REF#refs/tags/}"
+          VERSION="${RAW_TAG#*@}"
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          echo "Versão: $VERSION"
+      
+      - name: Build and push image
+        uses: docker/build-push-action@v1.1.1
+        with:
+          # Username used to log in to a Docker registry. If not set then no login will occur
+          username: mucusscraper
+          # Password or personal access token used to log in to a Docker registry. If not set then no login will occur
+          password: ${{ secrets.PACKAGE_PASSWORD }}
+          # Server address of Docker registry. If not set then will default to Docker Hub
+          registry: docker.pkg.github.com
+          # Docker repository to tag the image with
+          repository: mucusscraper/clinical-trials-analyzer/clinical-trials-analyzer
