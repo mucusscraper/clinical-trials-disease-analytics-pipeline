@@ -37,7 +37,7 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ github.repository }}/go-cli:latest
-            ghcr.io/${{ github.repository }}/go-cli:${{ env.VERSION }}
+            ghcr.io/${{ github.repository }}/go-cli:${{ github.sha}}
 
       - name: Build and push Python image
         uses: docker/build-push-action@v5
@@ -47,4 +47,4 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ github.repository }}/python-reports:latest
-            ghcr.io/${{ github.repository }}/python-reports:${{ env.VERSION }}
+            ghcr.io/${{ github.repository }}/python-reports:${{ github.sha }}
