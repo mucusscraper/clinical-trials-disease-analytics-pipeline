@@ -24,7 +24,7 @@ func (state *State) InsertBronze(ctx context.Context, study api.Studies, conditi
 	now := time.Now()
 	JSONStudy, err := json.Marshal(study)
 	if err != nil {
-		return fmt.Errorf("Error marshaling the study: %w", err)
+		return fmt.Errorf("error marshaling the study: %w", err)
 	}
 	_, err = state.DB.CreateRowBronze(ctx, database.CreateRowBronzeParams{
 		ID:        uuid.New(),
@@ -133,7 +133,7 @@ func (state *State) InsertSilver(ctx context.Context, study api.Studies, conditi
 		UpdatedAt: now,
 	})
 	if err != nil {
-		return fmt.Errorf("Error : %w", err)
+		return fmt.Errorf("error : %w", err)
 	}
 	LeadSponsor := study.ProtocolSection.SponsorCollaboratorsModule.LeadSponsor
 	if LeadSponsor.Name != "" {
@@ -148,7 +148,7 @@ func (state *State) InsertSilver(ctx context.Context, study api.Studies, conditi
 			UpdatedAt: now,
 		})
 		if err != nil {
-			return fmt.Errorf("Error creating lead sponsors: %w", err)
+			return fmt.Errorf("error creating lead sponsors: %w", err)
 		}
 	}
 	for _, Collaborator := range study.ProtocolSection.SponsorCollaboratorsModule.Collaborators {
@@ -165,7 +165,7 @@ func (state *State) InsertSilver(ctx context.Context, study api.Studies, conditi
 				UpdatedAt: now,
 			})
 			if err != nil {
-				return fmt.Errorf("Error creating collaborators: %w", err)
+				return fmt.Errorf("error creating collaborators: %w", err)
 			}
 		}
 	}
@@ -197,7 +197,7 @@ func (state *State) InsertSilver(ctx context.Context, study api.Studies, conditi
 			UpdatedAt: now,
 		})
 		if err != nil {
-			return fmt.Errorf("Error creating locations: %w", err)
+			return fmt.Errorf("error creating locations: %w", err)
 		}
 	}
 	for _, Intervention := range study.ProtocolSection.ArmsInterventionsModule.Interventions {
@@ -214,7 +214,7 @@ func (state *State) InsertSilver(ctx context.Context, study api.Studies, conditi
 			UpdatedAt: now,
 		})
 		if err != nil {
-			return fmt.Errorf("Error creating interventions: %w", err)
+			return fmt.Errorf("error creating interventions: %w", err)
 		}
 	}
 	for _, PrimaryOutcome := range study.ProtocolSection.OutcomesModule.PrimaryOutcomes {
@@ -231,7 +231,7 @@ func (state *State) InsertSilver(ctx context.Context, study api.Studies, conditi
 			UpdatedAt: now,
 		})
 		if err != nil {
-			return fmt.Errorf("Error creating outcomes: %w", err)
+			return fmt.Errorf("error creating outcomes: %w", err)
 		}
 	}
 	for _, SecondaryOutcome := range study.ProtocolSection.OutcomesModule.SecondaryOutcomes {
@@ -248,7 +248,7 @@ func (state *State) InsertSilver(ctx context.Context, study api.Studies, conditi
 			UpdatedAt: now,
 		})
 		if err != nil {
-			return fmt.Errorf("Error creating outcomes: %w", err)
+			return fmt.Errorf("error creating outcomes: %w", err)
 		}
 	}
 	_, err = state.DB.CreateRowSilverEligibility(ctx, database.CreateRowSilverEligibilityParams{
@@ -265,7 +265,7 @@ func (state *State) InsertSilver(ctx context.Context, study api.Studies, conditi
 		UpdatedAt: now,
 	})
 	if err != nil {
-		return fmt.Errorf("Error creating eligibility: %w", err)
+		return fmt.Errorf("error creating eligibility: %w", err)
 	}
 	_, err = state.DB.CreateRowSilverDesignDetails(ctx, database.CreateRowSilverDesignDetailsParams{
 		StudyID: SilverStudyRow.ID,
@@ -289,7 +289,7 @@ func (state *State) InsertSilver(ctx context.Context, study api.Studies, conditi
 		UpdatedAt: now,
 	})
 	if err != nil {
-		return fmt.Errorf("Error creating design details: %w", err)
+		return fmt.Errorf("error creating design details: %w", err)
 	}
 	_, err = state.DB.CreateRowSilverResponsibleParties(ctx, database.CreateRowSilverResponsiblePartiesParams{
 		StudyID: SilverStudyRow.ID,
@@ -313,7 +313,7 @@ func (state *State) InsertSilver(ctx context.Context, study api.Studies, conditi
 		UpdatedAt: now,
 	})
 	if err != nil {
-		return fmt.Errorf("Error creating responsible party: %w", err)
+		return fmt.Errorf("error creating responsible party: %w", err)
 	}
 	statusVerifiedDate, statusVerifiedDatePrecision, statusVerifiedDateValid := normalizeDate(
 		study.ProtocolSection.StatusModule.StatusVerifiedDate,
@@ -339,6 +339,9 @@ func (state *State) InsertSilver(ctx context.Context, study api.Studies, conditi
 		CreatedAt: now,
 		UpdatedAt: now,
 	})
+	if err != nil {
+		return fmt.Errorf("error creating rows for silver layer of study status: %w", err)
+	}
 	return nil
 }
 

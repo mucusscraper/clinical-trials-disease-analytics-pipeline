@@ -39,6 +39,10 @@ func FetchStudies(Conditions []string) map[string][]ApiResponseClinicalTrials {
 		var ClinicalTrials ApiResponseClinicalTrials
 		decoder := json.NewDecoder(res.Body)
 		err = decoder.Decode(&ClinicalTrials)
+		if err != nil {
+			fmt.Printf("Error decoding")
+			return nil
+		}
 		err = res.Body.Close()
 		if err != nil {
 			fmt.Printf("Error closing body")
@@ -65,6 +69,10 @@ func FetchStudies(Conditions []string) map[string][]ApiResponseClinicalTrials {
 			var ClinicalTrials ApiResponseClinicalTrials
 			decoder := json.NewDecoder(res.Body)
 			err = decoder.Decode(&ClinicalTrials)
+			if err != nil {
+				fmt.Printf("Error decoding")
+				return nil
+			}
 			err = res.Body.Close()
 			if err != nil {
 				fmt.Printf("Error closing body")
