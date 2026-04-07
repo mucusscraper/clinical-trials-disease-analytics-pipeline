@@ -1,19 +1,20 @@
 """
 This module provides utility functions for report generation.
 """
-from sqlalchemy import create_engine
-import pandas as pd
-from dotenv import load_dotenv
 import os
-from jinja2 import Environment, FileSystemLoader
-import plotly.express as px
-from datetime import datetime
 import argparse
 import re
 from pathlib import Path
-from plotly.subplots import make_subplots
+from datetime import datetime
+import pandas as pd
+import plotly.express as px
 import plotly.graph_objects as go
 import country_converter as coco
+from sqlalchemy import create_engine
+from dotenv import load_dotenv
+from jinja2 import Environment, FileSystemLoader
+from plotly.subplots import make_subplots
+
 
 def connect():
     """ Func to connect to database"""
@@ -36,7 +37,9 @@ def query_exec(conn, conditions):
         "collab": "SELECT * FROM gold.studies_collaborators_presence WHERE condition=ANY(%s)",
         "design": "SELECT * FROM gold.studies_design_details WHERE condition=ANY(%s)",
         "intervention": "SELECT * FROM gold.study_by_intervention_type WHERE condition=ANY(%s)",
-        "over_time": "SELECT condition, start_year, study_count FROM gold.studies_by_phase_over_time WHERE condition=ANY(%s)",
+        "over_time": ("SELECT condition, start_year, study_count "
+        "FROM gold.studies_by_phase_over_time "
+        "WHERE condition=ANY(%s)"),
         "many_studies": "SELECT * FROM gold.many_studies WHERE condition=ANY(%s)",
     }
 
@@ -81,7 +84,7 @@ def apply_layout(fig, title):
             "title": {"text": "<b>Legend</b>"},
             "font": {"size": 13}
         },
-        margin=dict(l=40, r=40, t=80, b=40)
+        margin= {"l":40, "r":40, "t":80, "b":40}
     )
 
     fig.update_xaxes(title_font={"size": 16})
@@ -139,8 +142,8 @@ def plot_world_map(df):
     fig.update_layout(
         title="<b>Global Distribution of Clinical Trials</b>",
         title_x=0.5,
-        margin=dict(t=80),
-        font=dict(size=14)
+        margin={"t":80},
+        font={"size":14}
     )
 
     return fig.to_html(full_html=False)
@@ -297,18 +300,18 @@ def build_plots(data):
 
 def render_html(plots,conditions):
     """ Func to render HTMLs"""
-    BASE_DIR = Path(__file__).resolve().parent
-    TEMPLATE_DIR = BASE_DIR.parent / "templates"
-    OUTPUT_DIR = BASE_DIR.parent / "outputs"
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    env = Environment(loader=FileSystemLoader(TEMPLATE_DIR),autoescape=True)
+    base_dir = Path(__file__).resolve().parent
+    template_dir = base_dir.parent / "templates"
+    output_dir = base_dir.parent / "outputs"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    env = Environment(loader=FileSystemLoader(template_dir),autoescape=True)
     template = env.get_template("report.html")
     html = template.render(**plots,
                            conditions=", ".join(conditions,),
                            generated_at=datetime.now().strftime("%Y-%m-%d %H:%M"))
     filename = build_filename(conditions)
-    output_path = OUTPUT_DIR / filename
-    with open(output_path, "w") as f:
+    output_path = output_dir / filename
+    with open(output_path, "w", encoding="utf-8") as f:
         f.write(html)
     print(f"Report saved to: {output_path}")
 
@@ -325,4 +328,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
