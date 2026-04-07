@@ -3,17 +3,20 @@ package cli
 import (
 	"bufio"
 	"fmt"
-	"os"
+	"io"
 	"strings"
 )
 
-func CLI() string {
-	scanner := bufio.NewScanner(os.Stdin)
+func CLI(input io.Reader) string {
+	scanner := bufio.NewScanner(input)
 	for {
 		fmt.Printf("> ")
 		if scanner.Scan() {
 			all_string := scanner.Text()
-			return strings.TrimSpace(strings.ToLower(all_string))
+			if all_string == "" {
+				continue
+			}
+			return strings.ToLower(strings.TrimSpace(all_string))
 		}
 	}
 }

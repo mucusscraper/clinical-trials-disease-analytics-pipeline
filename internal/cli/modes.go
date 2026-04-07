@@ -67,7 +67,9 @@ func RunReportMode(ctx context.Context, state *etl.State) {
 				if len(Conditions) > 2 {
 					fmt.Println("You can only add up to 2 conditions")
 				} else {
-					cmd := exec.Command("python3", "reports/scripts/generate_reports.py", "--conditions", strings.Join(Conditions, "|||"))
+					args := []string{"reports/scripts/generate_reports.py", "--conditions"}
+					args = append(args, Conditions...)
+					cmd := exec.Command("python3", args...)
 					output, err := cmd.CombinedOutput()
 					fmt.Println(string(output))
 					if err != nil {

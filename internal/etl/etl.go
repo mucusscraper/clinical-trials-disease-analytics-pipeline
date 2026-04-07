@@ -4,7 +4,9 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"math"
 	"strings"
 	"time"
 
@@ -38,12 +40,19 @@ func (state *State) InsertBronze(ctx context.Context, study api.Studies, conditi
 	return err
 }
 
+func SafeIntToInt32(n int) (int32, error) {
+	if n < math.MinInt32 || n > math.MaxInt32 {
+		return 0, errors.New("integer overflow: value out of 32 bits")
+	}
+	return int32(n), nil
+}
+
 func (state *State) InsertSilver(ctx context.Context, study api.Studies, condition string) error {
 	now := time.Now()
 	NCTID := study.ProtocolSection.IdentificationModule.NctId
 	StudyType := study.ProtocolSection.DesignModule.StudyType
 	Phase := strings.Join(study.ProtocolSection.DesignModule.Phases, "|")
-	Enrollment := study.ProtocolSection.DesignModule.EnrollmentInfo.Count
+	Enrollment, _ := SafeIntToInt32(study.ProtocolSection.DesignModule.EnrollmentInfo.Count)
 	startDate, startPrecision, startValid := normalizeDate(
 		study.ProtocolSection.StatusModule.StartDateStruct.Date,
 	)

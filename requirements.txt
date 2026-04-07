@@ -3,6 +3,8 @@ pandas
 python-dotenv
 jinja2
 plotly
-seaborn
-matplotlib
 psycopg2-binary
+pytest
+bandit
+country_converter
+pylint

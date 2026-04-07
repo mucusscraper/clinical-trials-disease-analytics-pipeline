@@ -31,12 +31,19 @@ func FetchStudies(Conditions []string) map[string][]ApiResponseClinicalTrials {
 			fmt.Printf("Not possible to use http GET\n")
 			fmt.Printf("%v\n", err)
 		}
-		bar.Add(1)
+		err = bar.Add(1)
+		if err != nil {
+			fmt.Printf("Bar error")
+		}
 		var ClinicalTrialsList []ApiResponseClinicalTrials
 		var ClinicalTrials ApiResponseClinicalTrials
 		decoder := json.NewDecoder(res.Body)
 		err = decoder.Decode(&ClinicalTrials)
-		res.Body.Close()
+		err = res.Body.Close()
+		if err != nil {
+			fmt.Printf("Error closing body")
+			return nil
+		}
 		if err != nil {
 			fmt.Printf("Not possible to decode JSON\n")
 			fmt.Printf("%v\n", err)
@@ -58,13 +65,20 @@ func FetchStudies(Conditions []string) map[string][]ApiResponseClinicalTrials {
 			var ClinicalTrials ApiResponseClinicalTrials
 			decoder := json.NewDecoder(res.Body)
 			err = decoder.Decode(&ClinicalTrials)
-			res.Body.Close()
+			err = res.Body.Close()
+			if err != nil {
+				fmt.Printf("Error closing body")
+				return nil
+			}
 			if err != nil {
 				fmt.Printf("Not possible to decode JSON\n")
 				fmt.Printf("%v\n", err)
 				return nil
 			}
-			bar.Add(1)
+			err = bar.Add(1)
+			if err != nil {
+				fmt.Printf("Bar error")
+			}
 			ClinicalTrialsList = append(ClinicalTrialsList, ClinicalTrials)
 			if ClinicalTrials.NextPageToken == "" {
 				break
@@ -73,6 +87,9 @@ func FetchStudies(Conditions []string) map[string][]ApiResponseClinicalTrials {
 		}
 		ClinicalTrialsMap[Condition] = ClinicalTrialsList
 	}
-	bar.Finish()
+	err := bar.Finish()
+	if err != nil {
+		fmt.Printf("Bar error")
+	}
 	return ClinicalTrialsMap
 }
