@@ -46,20 +46,9 @@ git clone https://github.com/mucusscraper/clinical-trials-disease-analytics-pipe
 cd clinical-trials-disease-analytics-pipeline
 ```
 
-### 2. Build the project and start PostgreSQL
+### 2. Build the project and execute
 ```bash
-make setup
-```
-
-### 3. Run CLI
-```bash
-make start
-```
-
-### Extra
-To stop the PostgreSQL container from running at the background:
-```bash
-make down
+docker compose up
 ```
 
 ### Option 2 - Local Setup
