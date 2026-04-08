@@ -48,7 +48,7 @@ cd clinical-trials-disease-analytics-pipeline
 
 ### 2. Build the project and execute
 ```bash
-docker compose up
+docker compose run --rm go-cli
 ```
 
 ### Option 2 - Local Setup
