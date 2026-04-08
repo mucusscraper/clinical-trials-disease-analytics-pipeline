@@ -9,11 +9,24 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  migrations:
+    image: ghcr.io/mucusscraper/clinical-trials-disease-analytics-pipeline/go-cli:latest
+    command: >
+      sh -c "goose -dir /app/sql/schema postgres
+      \"postgres://$DB_USER:$DB_PASSWORD@$DB_HOST:5432/$DB_NAME?sslmode=disable\" up"
+    depends_on:
+      - postgres
+    environment:
+      - DB_HOST=postgres
+      - DB_USER=admin
+      - DB_PASSWORD=admin
+      - DB_NAME=clinical_trials
+
   go-cli:
     image: ghcr.io/mucusscraper/clinical-trials-disease-analytics-pipeline/go-cli:latest
     container_name: go_app
     depends_on:
-      - postgres
+      - migrations
     environment:
       - DB_HOST=postgres
       - DB_USER=admin
@@ -22,7 +35,7 @@ services:
     stdin_open: true
     tty: true
     volumes:
-      - ./reports/outputs:/reports/outputs
+      - ./reports/outputs:/app/reports/outputs
       - ./sql/schema:/app/sql/schema
 
 volumes:
