@@ -22,7 +22,6 @@ RUN CGO_ENABLED=0 go build \
     ./cmd/trial-analyzer/
 
 
-# 👇 runtime simples e FUNCIONAL
 FROM alpine:3.20
 
 
