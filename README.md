@@ -48,15 +48,12 @@ cd clinical-trials-disease-analytics-pipeline
 
 ### 2. Build the project and start PostgreSQL
 ```bash
-make build
-```
-```bash
-make up
+make setup
 ```
 
 ### 3. Run CLI
 ```bash
-make run
+make start
 ```
 
 ### Extra

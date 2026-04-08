@@ -65,7 +65,6 @@ def clean_country(df):
             mapping[country] = normalized
     df = df.copy()
     df["country_clean"] = df["country"].replace(mapping)
-    print(df)
     return df
 
 def apply_layout(fig, title):
